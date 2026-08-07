@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 5036b8faa6ab22048b01710748e67f26
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 4362
+  packageName: Dinosaur Pack 1.0
+  packageVersion: 1.01
+  assetPath: Assets/Dinosaur_pack/Assets/Dinosaurs/terrain_mesh.prefab
+  uploadId: 26872

@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 6a822e82ccc624debbf583dd6b1d5a7d
+timeCreated: 1432777826
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 38331
+  packageName: Gallimimus
+  packageVersion: 1.0.3
+  assetPath: Assets/Gallimimus/Demo/Scenes/GallimimusSand.mat
+  uploadId: 809322

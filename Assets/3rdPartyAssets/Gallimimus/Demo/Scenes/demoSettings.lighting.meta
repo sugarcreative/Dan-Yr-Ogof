@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 39bd786a43ff0db49bc5f30403d5aeee
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 4890085278179872738
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 38331
+  packageName: Gallimimus
+  packageVersion: 1.0.3
+  assetPath: Assets/Gallimimus/Demo/Scenes/demoSettings.lighting
+  uploadId: 809322

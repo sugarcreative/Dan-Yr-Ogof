@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 16d65169df02a4b6da2fac9e02842c3c
+timeCreated: 1444137152
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 38331
+  packageName: Gallimimus
+  packageVersion: 1.0.3
+  assetPath: Assets/Gallimimus/Demo/New Terrain.asset
+  uploadId: 809322

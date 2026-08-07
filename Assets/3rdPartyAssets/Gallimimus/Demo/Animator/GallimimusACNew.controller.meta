@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: b71e53d8d2dc7d04ea0421fec2e91868
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 9100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 38331
+  packageName: Gallimimus
+  packageVersion: 1.0.3
+  assetPath: Assets/Gallimimus/Demo/Animator/GallimimusACNew.controller
+  uploadId: 809322

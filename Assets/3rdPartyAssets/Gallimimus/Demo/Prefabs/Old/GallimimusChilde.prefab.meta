@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: e9ccbbc8b99f946bebc05f59a767dc3d
+timeCreated: 1462671182
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 38331
+  packageName: Gallimimus
+  packageVersion: 1.0.3
+  assetPath: Assets/Gallimimus/Demo/Prefabs/Old/GallimimusChilde.prefab
+  uploadId: 809322

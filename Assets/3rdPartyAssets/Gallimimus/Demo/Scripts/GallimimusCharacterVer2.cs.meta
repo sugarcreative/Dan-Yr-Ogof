@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: c5a9c6a633ab31144820c0793b6fd906
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 38331
+  packageName: Gallimimus
+  packageVersion: 1.0.3
+  assetPath: Assets/Gallimimus/Demo/Scripts/GallimimusCharacterVer2.cs
+  uploadId: 809322

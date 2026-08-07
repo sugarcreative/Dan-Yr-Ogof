@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: c9da8c44d3ad70d4a91d9b07dc414ed2
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 38331
+  packageName: Gallimimus
+  packageVersion: 1.0.3
+  assetPath: Assets/Gallimimus/Demo/Scripts/AnimalCharacter.cs
+  uploadId: 809322

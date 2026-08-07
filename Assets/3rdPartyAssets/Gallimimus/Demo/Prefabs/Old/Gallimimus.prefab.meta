@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 2960a1dc41e9e4f4195caa0d06a46784
+timeCreated: 1444183703
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 38331
+  packageName: Gallimimus
+  packageVersion: 1.0.3
+  assetPath: Assets/Gallimimus/Demo/Prefabs/Old/Gallimimus.prefab
+  uploadId: 809322

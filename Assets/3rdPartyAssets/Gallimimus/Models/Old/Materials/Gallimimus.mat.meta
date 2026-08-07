@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 510a5501ce63f47e29a7ce4dc358a252
+timeCreated: 1444177205
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 38331
+  packageName: Gallimimus
+  packageVersion: 1.0.3
+  assetPath: Assets/Gallimimus/Models/Old/Materials/Gallimimus.mat
+  uploadId: 809322

@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: b6637ca48367e42a1a1e1d036dd706da
+timeCreated: 1432734210
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 38331
+  packageName: Gallimimus
+  packageVersion: 1.0.3
+  assetPath: Assets/Gallimimus/Demo/Animator/GallimimusACOld.controller
+  uploadId: 809322

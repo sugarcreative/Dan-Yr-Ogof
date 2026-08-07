@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 70c081f5d0643ab45b0aefd19d70b7fc
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 38331
+  packageName: Gallimimus
+  packageVersion: 1.0.3
+  assetPath: Assets/Gallimimus/Demo/Prefabs/GallimimusMiddlePoly.prefab
+  uploadId: 809322

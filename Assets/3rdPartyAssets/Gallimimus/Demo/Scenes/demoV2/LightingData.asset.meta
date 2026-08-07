@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 7a4d49f1a1a27454f90f842eb71cd87c
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 112000000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 38331
+  packageName: Gallimimus
+  packageVersion: 1.0.3
+  assetPath: Assets/Gallimimus/Demo/Scenes/demoV2/LightingData.asset
+  uploadId: 809322

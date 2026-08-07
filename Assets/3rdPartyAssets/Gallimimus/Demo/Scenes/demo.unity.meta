@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 15149fbf96d314ecf8c7b155c0629242
+timeCreated: 1443973925
+licenseType: Store
+DefaultImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 38331
+  packageName: Gallimimus
+  packageVersion: 1.0.3
+  assetPath: Assets/Gallimimus/Demo/Scenes/demo.unity
+  uploadId: 809322
