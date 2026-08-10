@@ -6,21 +6,38 @@ using UnityEngine.XR.ARSubsystems;
 
 public class ImageTargetAnchorPlacer : MonoBehaviour
 {
+    [Serializable]
+    private class ImagePlacement
+    {
+        public string imageName;
+        public GameObject contentPrefab;
+        public Vector3 contentScale = Vector3.one;
+    }
+
+    private enum PlacementState
+    {
+        Searching,
+        Calibrating,
+        Anchored,
+        WaitingForRecalibrationImage
+    }
+
+    private const string SearchingStatus = "Searching for image...";
+    private const string FindImageStatus = "Find the image trigger.";
+    private const string CalibratingStatus = "Calibrating, please remain focused on the image trigger.";
+    private const string PlacedStatus = "Placed.";
+    private const string MissingPrefabStatus = "Missing content prefab.";
+
     [Header("AR References")]
     [SerializeField] private ARTrackedImageManager trackedImageManager;
 
-    [Header("Placement")]
-    [SerializeField] private GameObject contentPrefab;
-    [SerializeField] private string targetImageName;
-    [SerializeField] private Vector3 positionOffset;
-    [SerializeField] private Vector3 rotationOffset;
-    [SerializeField] private Vector3 contentScale = Vector3.one;
+    [Header("Image Placements")]
+    [SerializeField] private ImagePlacement[] imagePlacements;
 
-    [Header("Optional Drift Correction")]
-    [SerializeField] private bool correctWhenImageVisible;
-    [SerializeField] private float correctionPositionThreshold = 0.03f;
-    [SerializeField] private float correctionRotationThreshold = 3f;
-    [SerializeField] private float correctionSpeed = 2f;
+    [Header("Calibration")]
+    [SerializeField] private float calibrationDuration = 3f;
+    [SerializeField] private float calibrationCorrectionSpeed = 6f;
+    [SerializeField] private bool resetCalibrationTimerWhenImageLost;
 
     [Header("Status Events")]
     public UnityEvent<string> statusChanged;
@@ -28,26 +45,42 @@ public class ImageTargetAnchorPlacer : MonoBehaviour
     private ARAnchor anchor;
     private Transform contentRoot;
     private GameObject contentInstance;
+    private ARTrackedImage activeTrackedImage;
+    private ImagePlacement activePlacement;
+    private PlacementState state = PlacementState.Searching;
     private bool isPlaced;
+    private float calibrationTimer;
     private string currentStatus;
 
     public bool IsPlaced => isPlaced;
     public string CurrentStatus => currentStatus;
     public GameObject ContentInstance => contentInstance;
+    public float CalibrationProgress => Mathf.Clamp01(calibrationTimer / Mathf.Max(0.0001f, calibrationDuration));
 
     private void Awake()
     {
         if (trackedImageManager == null)
             trackedImageManager = FindObjectOfType<ARTrackedImageManager>();
 
-        SetStatus("Searching for image...");
+        SetStatus(SearchingStatus);
     }
 
     private void OnValidate()
     {
-        correctionPositionThreshold = Mathf.Max(0f, correctionPositionThreshold);
-        correctionRotationThreshold = Mathf.Max(0f, correctionRotationThreshold);
-        correctionSpeed = Mathf.Max(0f, correctionSpeed);
+        calibrationDuration = Mathf.Max(0f, calibrationDuration);
+        calibrationCorrectionSpeed = Mathf.Max(0f, calibrationCorrectionSpeed);
+
+        if (imagePlacements == null)
+            return;
+
+        foreach (ImagePlacement placement in imagePlacements)
+        {
+            if (placement == null)
+                continue;
+
+            if (placement.contentScale == Vector3.zero)
+                placement.contentScale = Vector3.one;
+        }
     }
 
     private void OnEnable()
@@ -62,89 +95,161 @@ public class ImageTargetAnchorPlacer : MonoBehaviour
             trackedImageManager.trackedImagesChanged -= OnTrackedImagesChanged;
     }
 
+    private void Update()
+    {
+        if (state != PlacementState.Calibrating)
+            return;
+
+        if (!IsTrackedActiveImage())
+        {
+            if (resetCalibrationTimerWhenImageLost)
+                calibrationTimer = 0f;
+
+            SetStatus(FindImageStatus);
+            return;
+        }
+
+        Pose targetPose = GetImagePose(activeTrackedImage.transform);
+        CorrectContentToward(targetPose);
+
+        calibrationTimer += Time.deltaTime;
+        SetStatus(CalibratingStatus);
+
+        if (calibrationTimer >= calibrationDuration)
+            CompleteCalibration();
+    }
+
     private void OnTrackedImagesChanged(ARTrackedImagesChangedEventArgs eventArgs)
     {
         foreach (ARTrackedImage trackedImage in eventArgs.added)
-            TryPlaceOrCorrect(trackedImage);
+            TryUseTrackedImage(trackedImage);
 
         foreach (ARTrackedImage trackedImage in eventArgs.updated)
-            TryPlaceOrCorrect(trackedImage);
+            TryUseTrackedImage(trackedImage);
     }
 
-    private void TryPlaceOrCorrect(ARTrackedImage trackedImage)
+    private void TryUseTrackedImage(ARTrackedImage trackedImage)
     {
-        if (!IsUsableImage(trackedImage))
+        ImagePlacement placement = GetPlacementFor(trackedImage);
+        if (placement == null)
             return;
 
-        Pose targetPose = GetContentPose(trackedImage.transform);
-
-        if (!isPlaced)
+        if (state == PlacementState.Searching)
         {
-            PlaceContent(targetPose);
+            activePlacement = placement;
+            activeTrackedImage = trackedImage;
+
+            Pose targetPose = GetImagePose(trackedImage.transform);
+            if (PlaceContentForCalibration(targetPose, activePlacement))
+                BeginCalibration();
+
             return;
         }
 
-        if (correctWhenImageVisible)
-            CorrectContentToward(targetPose);
+        if (placement != activePlacement)
+        {
+            if (SwapContent(placement))
+            {
+                activePlacement = placement;
+                activeTrackedImage = trackedImage;
+            }
+        }
+
+        if (state == PlacementState.WaitingForRecalibrationImage)
+        {
+            activeTrackedImage = trackedImage;
+            BeginCalibration();
+        }
     }
 
-    private bool IsUsableImage(ARTrackedImage trackedImage)
+    private ImagePlacement GetPlacementFor(ARTrackedImage trackedImage)
     {
         if (trackedImage == null)
-            return false;
+            return null;
 
         if (trackedImage.trackingState != TrackingState.Tracking)
-        {
-            if (!isPlaced)
-                SetStatus("Calibrating...");
+            return null;
 
+        if (imagePlacements == null)
+            return null;
+
+        string imageName = trackedImage.referenceImage.name;
+
+        foreach (ImagePlacement placement in imagePlacements)
+        {
+            if (placement == null || string.IsNullOrWhiteSpace(placement.imageName))
+                continue;
+
+            if (string.Equals(placement.imageName, imageName, StringComparison.OrdinalIgnoreCase))
+                return placement;
+        }
+
+        return null;
+    }
+
+    private bool IsTrackedActiveImage()
+    {
+        return activeTrackedImage != null
+            && activeTrackedImage.trackingState == TrackingState.Tracking
+            && activePlacement != null
+            && string.Equals(
+                activePlacement.imageName,
+                activeTrackedImage.referenceImage.name,
+                StringComparison.OrdinalIgnoreCase);
+    }
+
+    private Pose GetImagePose(Transform imageTransform)
+    {
+        return new Pose(imageTransform.position, imageTransform.rotation);
+    }
+
+    private bool PlaceContentForCalibration(Pose targetPose, ImagePlacement placement)
+    {
+        GameObject rootObject = new GameObject("AR Content Root");
+        contentRoot = rootObject.transform;
+        contentRoot.SetPositionAndRotation(targetPose.position, targetPose.rotation);
+        contentRoot.localScale = Vector3.one;
+
+        if (!SpawnContent(placement))
+        {
+            Destroy(rootObject);
+            contentRoot = null;
             return false;
         }
 
-        if (string.IsNullOrWhiteSpace(targetImageName))
-            return true;
-
-        return string.Equals(
-            trackedImage.referenceImage.name,
-            targetImageName,
-            StringComparison.OrdinalIgnoreCase);
+        isPlaced = true;
+        return true;
     }
 
-    private Pose GetContentPose(Transform imageTransform)
+    private bool SwapContent(ImagePlacement placement)
     {
-        Quaternion rotation = imageTransform.rotation * Quaternion.Euler(rotationOffset);
-        Vector3 position = imageTransform.TransformPoint(positionOffset);
-        return new Pose(position, rotation);
+        return contentRoot != null && SpawnContent(placement);
     }
 
-    private void PlaceContent(Pose targetPose)
+    private bool SpawnContent(ImagePlacement placement)
     {
-        if (contentPrefab == null)
+        if (placement == null)
+            return false;
+
+        if (placement.contentPrefab == null)
         {
-            SetStatus("Missing content prefab.");
-            Debug.LogWarning($"{nameof(ImageTargetAnchorPlacer)} needs a content prefab.", this);
-            return;
+            SetStatus(MissingPrefabStatus);
+            Debug.LogWarning(
+                $"{nameof(ImageTargetAnchorPlacer)} is missing a content prefab for '{placement.imageName}'.",
+                this);
+            return false;
         }
 
-        GameObject anchorObject = new GameObject("Image Target Anchor");
-        anchorObject.transform.SetPositionAndRotation(targetPose.position, targetPose.rotation);
-        anchor = anchorObject.AddComponent<ARAnchor>();
+        if (contentInstance != null)
+            Destroy(contentInstance);
 
-        GameObject rootObject = new GameObject("Anchored Content Root");
-        contentRoot = rootObject.transform;
-        contentRoot.SetParent(anchorObject.transform, false);
-        contentRoot.localPosition = Vector3.zero;
-        contentRoot.localRotation = Quaternion.identity;
-        contentRoot.localScale = Vector3.one;
-
-        contentInstance = Instantiate(contentPrefab, contentRoot);
+        contentInstance = Instantiate(placement.contentPrefab, contentRoot);
         contentInstance.transform.localPosition = Vector3.zero;
         contentInstance.transform.localRotation = Quaternion.identity;
-        contentInstance.transform.localScale = contentScale;
+        contentInstance.transform.localScale = placement.contentScale;
         contentInstance.SetActive(true);
 
-        isPlaced = true;
-        SetStatus("Placed.");
+        return true;
     }
 
     private void CorrectContentToward(Pose targetPose)
@@ -152,18 +257,59 @@ public class ImageTargetAnchorPlacer : MonoBehaviour
         if (contentRoot == null)
             return;
 
-        float positionDelta = Vector3.Distance(contentRoot.position, targetPose.position);
-        float rotationDelta = Quaternion.Angle(contentRoot.rotation, targetPose.rotation);
+        float t = calibrationCorrectionSpeed <= 0f
+            ? 1f
+            : 1f - Mathf.Exp(-calibrationCorrectionSpeed * Time.deltaTime);
 
-        if (positionDelta < correctionPositionThreshold && rotationDelta < correctionRotationThreshold)
-            return;
-
-        float t = 1f - Mathf.Exp(-correctionSpeed * Time.deltaTime);
         contentRoot.SetPositionAndRotation(
             Vector3.Lerp(contentRoot.position, targetPose.position, t),
             Quaternion.Slerp(contentRoot.rotation, targetPose.rotation, t));
+    }
 
-        SetStatus("Correcting placement...");
+    private void BeginCalibration()
+    {
+        RemoveCurrentAnchorKeepContentInPlace();
+        calibrationTimer = 0f;
+        state = PlacementState.Calibrating;
+        SetStatus(CalibratingStatus);
+    }
+
+    private void CompleteCalibration()
+    {
+        if (contentRoot != null)
+            CreateAnchorAtContentRoot();
+
+        state = PlacementState.Anchored;
+        calibrationTimer = 0f;
+        SetStatus(PlacedStatus);
+    }
+
+    private void CreateAnchorAtContentRoot()
+    {
+        RemoveCurrentAnchorKeepContentInPlace();
+
+        GameObject anchorObject = new GameObject("Image Target Anchor");
+        anchorObject.transform.SetPositionAndRotation(contentRoot.position, contentRoot.rotation);
+        anchor = anchorObject.AddComponent<ARAnchor>();
+
+        contentRoot.SetParent(anchorObject.transform, true);
+        contentRoot.localPosition = Vector3.zero;
+        contentRoot.localRotation = Quaternion.identity;
+        contentRoot.localScale = Vector3.one;
+    }
+
+    private void RemoveCurrentAnchorKeepContentInPlace()
+    {
+        if (anchor == null)
+            return;
+
+        Transform oldAnchorTransform = anchor.transform;
+
+        if (contentRoot != null)
+            contentRoot.SetParent(null, true);
+
+        Destroy(oldAnchorTransform.gameObject);
+        anchor = null;
     }
 
     private void SetStatus(string status)
@@ -189,7 +335,24 @@ public class ImageTargetAnchorPlacer : MonoBehaviour
         contentInstance = null;
         contentRoot = null;
         anchor = null;
+        activeTrackedImage = null;
+        activePlacement = null;
         isPlaced = false;
-        SetStatus("Searching for image...");
+        calibrationTimer = 0f;
+        state = PlacementState.Searching;
+        SetStatus(SearchingStatus);
+    }
+
+    public void Recalibrate()
+    {
+        if (!isPlaced)
+        {
+            ResetPlacement();
+            return;
+        }
+
+        state = PlacementState.WaitingForRecalibrationImage;
+        calibrationTimer = 0f;
+        SetStatus(FindImageStatus);
     }
 }
