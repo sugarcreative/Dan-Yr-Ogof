@@ -1,5 +1,11 @@
 {
   "dependencies": {
+    "com.mapbox.sdk": "https://github.com/mapbox/mapbox-unity-sdk.git#sdk3",
+    "com.sugarcreative.audio": "https://github.com/sugarcreative/SugarAudio.git?path=/Packages/SugarCreative/Audio#Package-Deployment-Main",
+    "com.sugarcreative.core": "https://github.com/sugarcreative/SugarCore.git?path=/Packages/SugarCreative/Core#Package-Deployment-Main",
+    "com.sugarcreative.interaction": "https://github.com/sugarcreative/SugarInteraction.git?path=/Packages/SugarCreative/Interaction#Package-Deployment-Main",
+    "com.sugarcreative.mapbox": "https://github.com/sugarcreative/SugarMapbox.git?path=/Packages/SugarCreative/Mapbox#Package-Deployment-Main",
+    "com.sugarcreative.saveload": "https://github.com/sugarcreative/SugarSaveLoad.git?path=/Packages/SugarCreative/SaveLoad#Package-Deployment-Main",
     "com.unity.ai.navigation": "2.0.16",
     "com.unity.collab-proxy": "2.13.6",
     "com.unity.ide.rider": "3.1.0",

@@ -1,5 +1,63 @@
 {
   "dependencies": {
+    "com.mapbox.sdk": {
+      "version": "https://github.com/mapbox/mapbox-unity-sdk.git#sdk3",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {
+        "com.unity.render-pipelines.universal": "10.10.1",
+        "com.unity.nuget.newtonsoft-json": "3.2.1"
+      },
+      "hash": "7c58b2e4c1d3436c9f0a1ea92e5c81eca81babf5"
+    },
+    "com.sugarcreative.audio": {
+      "version": "https://github.com/sugarcreative/SugarAudio.git?path=/Packages/SugarCreative/Audio#Package-Deployment-Main",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {
+        "com.unity.ugui": "2.0.0",
+        "com.unity.inputsystem": "1.19.0"
+      },
+      "hash": "45f2caaf89e20698667b6717c0e487a0d4bcc601"
+    },
+    "com.sugarcreative.core": {
+      "version": "https://github.com/sugarcreative/SugarCore.git?path=/Packages/SugarCreative/Core#Package-Deployment-Main",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {
+        "com.unity.ugui": "2.0.0"
+      },
+      "hash": "37c73e0b1d9313aaa31399df8055c76c7a5c0711"
+    },
+    "com.sugarcreative.interaction": {
+      "version": "https://github.com/sugarcreative/SugarInteraction.git?path=/Packages/SugarCreative/Interaction#Package-Deployment-Main",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {
+        "com.unity.inputsystem": "1.19.0",
+        "com.unity.ugui": "2.0.0"
+      },
+      "hash": "d257709b2071c5152bde31ac86e8cb0a2ccdf9f2"
+    },
+    "com.sugarcreative.mapbox": {
+      "version": "https://github.com/sugarcreative/SugarMapbox.git?path=/Packages/SugarCreative/Mapbox#Package-Deployment-Main",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {
+        "com.unity.inputsystem": "1.19.0"
+      },
+      "hash": "3dc36329376edec487079b6fcc58dd29eea4e9d4"
+    },
+    "com.sugarcreative.saveload": {
+      "version": "https://github.com/sugarcreative/SugarSaveLoad.git?path=/Packages/SugarCreative/SaveLoad#Package-Deployment-Main",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {
+        "com.unity.ugui": "2.0.0",
+        "com.unity.inputsystem": "1.19.0"
+      },
+      "hash": "7340fdf19616fb2e73b6ec049662aa41f210b6c9"
+    },
     "com.unity.ai.navigation": {
       "version": "2.0.16",
       "depth": 0,
@@ -95,6 +153,13 @@
     "com.unity.nuget.mono-cecil": {
       "version": "1.11.6",
       "depth": 3,
+      "source": "registry",
+      "dependencies": {},
+      "url": "https://packages.unity.com"
+    },
+    "com.unity.nuget.newtonsoft-json": {
+      "version": "3.2.2",
+      "depth": 1,
       "source": "registry",
       "dependencies": {},
       "url": "https://packages.unity.com"

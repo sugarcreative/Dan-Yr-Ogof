@@ -6,10 +6,10 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 0
-    path: Assets/Sugar/Scenes/SimpleARDinos.unity
+    path: Assets/Sugar/Scenes/Testing/SimpleARDinos.unity
     guid: 99c9720ab356a0642a771bea13969a05
   - enabled: 1
-    path: Assets/Sugar/Scenes/ImageSlamTracking.unity
+    path: Assets/Sugar/Scenes/Testing/ImageSlamTracking.unity
     guid: 55ff69bf369cb1641b9784b3e22eac66
   m_configObjects:
     UnityEditor.XR.ARCore.ARCoreSettings: {fileID: 11400000, guid: 1c217aeccb9de0245bb9817372807349, type: 2}
