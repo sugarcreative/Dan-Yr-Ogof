@@ -8,9 +8,15 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/Sugar/Scenes/Testing/SimpleARDinos.unity
     guid: 99c9720ab356a0642a771bea13969a05
-  - enabled: 1
+  - enabled: 0
     path: Assets/Sugar/Scenes/Testing/ImageSlamTracking.unity
     guid: 55ff69bf369cb1641b9784b3e22eac66
+  - enabled: 1
+    path: Assets/Sugar/Scenes/Landing_Screen.unity
+    guid: 16df96c26620fd346ba64046013b01f4
+  - enabled: 1
+    path: Assets/Sugar/Scenes/Map.unity
+    guid: 20c74916748b57844b236478cccb07ef
   m_configObjects:
     UnityEditor.XR.ARCore.ARCoreSettings: {fileID: 11400000, guid: 1c217aeccb9de0245bb9817372807349, type: 2}
     UnityEditor.XR.ARKit.ARKitSettings: {fileID: 11400000, guid: e0a595156d6287c4c9f4a0a42814df1c, type: 2}
